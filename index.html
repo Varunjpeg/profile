@@ -1,248 +1,1206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Varun U | Silicon Portfolio</title>
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <style>
-        :root {
-            --bg: #05050a;
-            --chip-body: #1a1a1a;
-            --trace-color: #39ff14; /* Neon Green */
-            --data-flow: #00f3ff;  /* Neon Blue */
-            --text: #ffffff;
-        }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Varun U </title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f5f0e8;
+    --yellow: #FFD600;
+    --orange: #FF5722;
+    --cyan: #00E5FF;
+    --pink: #FF1493;
+    --green: #39FF14;
+    --card-bg: #111111;
+  }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* The Main Processor at the Top */
-        .processor-container {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            background: radial-gradient(circle, #111 0%, #05050a 100%);
-        }
+  html { scroll-behavior: smooth; }
 
-        .cpu {
-            width: 200px;
-            height: 200px;
-            background: var(--chip-body);
-            border: 4px solid #444;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
-            z-index: 10;
-        }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
 
-        .cpu::after {
-            content: "VARUN-V1";
-            color: #555;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
+  /* CURSOR */
+  #cursor {
+    width: 12px; height: 12px;
+    background: var(--yellow);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
+  }
+  #cursor.big { width: 48px; height: 48px; }
 
-        /* Glowing Pins */
-        .pin {
-            position: absolute;
-            background: var(--trace-color);
-            box-shadow: 0 0 10px var(--trace-color);
-        }
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #222;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    color: var(--yellow);
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: #aaa;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--yellow); }
 
-        /* Data Streams flowing down on scroll */
-        .data-line {
-            position: absolute;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--data-flow), transparent);
-            z-index: 1;
-        }
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
 
-        .hero-text {
-            margin-top: 30px;
-            text-align: center;
-        }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(255,214,0,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(0,229,255,0.06) 0%, transparent 70%);
+  }
 
-        .hero-text h1 {
-            font-size: 3.5rem;
-            letter-spacing: 5px;
-            margin-bottom: 0;
-            text-transform: uppercase;
-        }
+  .hero-grid-lines {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
 
-        /* Sections styled as Modules */
-        section {
-            max-width: 900px;
-            margin: 100px auto;
-            padding: 40px;
-            border-left: 2px solid var(--data-flow);
-            position: relative;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(5px);
-        }
+  .hero-left { position: relative; z-index: 1; }
 
-        section::before {
-            content: "BUS_ACTIVE";
-            position: absolute;
-            top: -20px;
-            left: 0;
-            font-size: 0.7rem;
-            color: var(--data-flow);
-            font-family: monospace;
-        }
+  .hero-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    background: rgba(0,229,255,0.1);
+    border: 1px solid rgba(0,229,255,0.3);
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
 
-        h2 {
-            color: var(--trace-color);
-            text-transform: uppercase;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-        }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 10vw, 9rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.5rem;
+  }
 
-        .card {
-            background: #0d0d1a;
-            border: 1px solid #222;
-            padding: 20px;
-            margin: 20px 0;
-            transition: 0.3s;
-        }
+  .hero-name span {
+    display: block;
+    -webkit-text-stroke: 2px var(--yellow);
+    color: transparent;
+  }
+  .hero-name span.solid { color: var(--paper); -webkit-text-stroke: 0; }
 
-        .card:hover {
-            border-color: var(--data-flow);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
-        }
+  .hero-desc {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #aaa;
+    max-width: 400px;
+    margin-bottom: 2.5rem;
+  }
 
-        .skill-list {
-            display: flex;
-            wrap: wrap;
-            gap: 10px;
-            list-style: none;
-            padding: 0;
-        }
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
 
-        .skill-list li {
-            background: #1a1a2e;
-            padding: 5px 15px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            border: 1px solid var(--trace-color);
-        }
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.8rem 2rem;
+    border: none;
+    cursor: none;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--yellow); color: var(--ink); }
+  .btn-primary:hover { background: var(--orange); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid #444;
+  }
+  .btn-outline:hover { border-color: var(--yellow); color: var(--yellow); transform: translateY(-2px); }
 
-        /* Animated Scroll Effect */
-        .reveal { visibility: hidden; }
+  .hero-right {
+    position: relative; z-index: 1;
+    display: flex; justify-content: center; align-items: center;
+  }
 
-    </style>
+  .hero-visual {
+    width: 320px; height: 320px;
+    position: relative;
+  }
+
+  .hero-chip {
+    width: 200px; height: 200px;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--card-bg);
+    border: 2px solid #333;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .chip-inner {
+    width: 120px; height: 120px;
+    border: 2px solid var(--yellow);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 4px; padding: 10px;
+    animation: chipPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes chipPulse {
+    0%, 100% { border-color: var(--yellow); box-shadow: 0 0 0 rgba(255,214,0,0); }
+    50% { border-color: var(--cyan); box-shadow: 0 0 30px rgba(0,229,255,0.3); }
+  }
+
+  .chip-cell {
+    background: #222;
+    animation: cellBlink 2s ease-in-out infinite;
+  }
+  .chip-cell:nth-child(odd) { animation-delay: 0.3s; background: #1a1a1a; }
+  .chip-cell.active { background: var(--yellow); }
+
+  @keyframes cellBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .chip-pins {
+    position: absolute; inset: 0;
+  }
+
+  .pin {
+    position: absolute;
+    background: #555;
+    width: 20px; height: 4px;
+  }
+
+  .orbit {
+    position: absolute; inset: 0;
+    border: 1px dashed rgba(255,214,0,0.2);
+    border-radius: 50%;
+    animation: spin 20s linear infinite;
+  }
+  .orbit::before {
+    content: '';
+    position: absolute; top: -5px; left: 50%;
+    width: 10px; height: 10px;
+    background: var(--cyan);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 12px var(--cyan);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .orbit2 {
+    position: absolute;
+    inset: 20px;
+    border: 1px dashed rgba(0,229,255,0.15);
+    border-radius: 50%;
+    animation: spin 14s linear infinite reverse;
+  }
+  .orbit2::before {
+    content: '';
+    position: absolute; top: -4px; left: 50%;
+    width: 8px; height: 8px;
+    background: var(--pink);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px var(--pink);
+  }
+
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: #555;
+    text-transform: uppercase;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  .scroll-hint::after {
+    content: '';
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, #555, transparent);
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1;
+    margin-bottom: 3rem;
+  }
+
+  /* ABOUT */
+  #about { padding-top: 6rem; }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: #bbb;
+    line-height: 1.8;
+    font-size: 1.05rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #222;
+    border: 1px solid #222;
+  }
+
+  .stat-box {
+    background: var(--card-bg);
+    padding: 2rem;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  .stat-box:hover { background: #181818; }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    line-height: 1;
+    color: var(--yellow);
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: #666;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    display: block;
+  }
+
+  .highlight-bar {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-left: 3px solid var(--cyan);
+    background: rgba(0,229,255,0.05);
+  }
+  .highlight-bar p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--cyan);
+    line-height: 1.6;
+  }
+
+  /* SKILLS */
+  #skills { border-top: 1px solid #1a1a1a; }
+
+  .skills-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: #222;
+    border: 1px solid #222;
+  }
+
+  .skill-group {
+    background: var(--card-bg);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .skill-group:hover { background: #161616; }
+
+  .skill-group::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+  }
+  .skill-group:nth-child(1)::before { background: var(--yellow); }
+  .skill-group:nth-child(2)::before { background: var(--cyan); }
+  .skill-group:nth-child(3)::before { background: var(--pink); }
+  .skill-group:nth-child(4)::before { background: var(--green); }
+  .skill-group:nth-child(5)::before { background: var(--orange); }
+
+  .skill-group-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 1rem;
+  }
+
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.3rem 0.7rem;
+    background: #1e1e1e;
+    border: 1px solid #333;
+    color: var(--paper);
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .tag:hover { border-color: var(--yellow); color: var(--yellow); transform: translateY(-2px); }
+
+  /* PROJECTS */
+  #projects { border-top: 1px solid #1a1a1a; }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1px;
+    background: #222;
+    border: 1px solid #222;
+  }
+
+  .project-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: none;
+  }
+
+  .project-card:hover { background: #141414; }
+
+  .project-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .project-card:nth-child(1)::after { background: var(--yellow); }
+  .project-card:nth-child(2)::after { background: var(--cyan); }
+  .project-card:nth-child(3)::after { background: var(--pink); }
+  .project-card:nth-child(4)::after { background: var(--green); }
+  .project-card:nth-child(5)::after { background: var(--orange); }
+  .project-card:nth-child(6)::after { background: var(--yellow); }
+  .project-card:nth-child(7)::after { background: var(--cyan); }
+  .project-card:nth-child(8)::after { background: var(--pink); }
+  .project-card:hover::after { transform: scaleX(1); }
+
+  .project-status {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+  .status-done { background: rgba(57,255,20,0.1); color: var(--green); border: 1px solid rgba(57,255,20,0.3); }
+  .status-progress { background: rgba(255,214,0,0.1); color: var(--yellow); border: 1px solid rgba(255,214,0,0.3); }
+
+  .project-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.8rem;
+    line-height: 1.1;
+  }
+
+  .project-desc {
+    font-size: 0.875rem;
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
+  }
+
+  .project-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+  .tech-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: #666;
+    background: #1a1a1a;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid #2a2a2a;
+  }
+
+  /* EXPERIENCE */
+  #experience { border-top: 1px solid #1a1a1a; }
+
+  .exp-card {
+    border: 1px solid #222;
+    padding: 2.5rem;
+    background: var(--card-bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exp-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(to right, var(--yellow), var(--orange));
+  }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  .exp-role {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+  }
+
+  .exp-company {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--yellow);
+    margin-top: 0.2rem;
+  }
+
+  .exp-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: #555;
+    letter-spacing: 0.1em;
+    background: #1a1a1a;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #2a2a2a;
+    white-space: nowrap;
+    height: fit-content;
+  }
+
+  .exp-bullets { list-style: none; }
+  .exp-bullets li {
+    font-size: 0.9rem;
+    color: #999;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #1a1a1a;
+    padding-left: 1.5rem;
+    position: relative;
+    line-height: 1.6;
+  }
+  .exp-bullets li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--yellow);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ACHIEVEMENTS */
+  #achievements { border-top: 1px solid #1a1a1a; }
+
+  .ach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px;
+    background: #222;
+    border: 1px solid #222;
+  }
+
+  .ach-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .ach-card:hover { background: #161616; }
+
+  .ach-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .ach-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+
+  .ach-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: #666;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+  }
+
+  .ach-badge {
+    position: absolute; top: 1.2rem; right: 1.2rem;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .ach-card:nth-child(1) .ach-badge { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+  .ach-card:nth-child(2) .ach-badge { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+  .ach-card:nth-child(3) .ach-badge { background: var(--pink); box-shadow: 0 0 8px var(--pink); }
+  .ach-card:nth-child(4) .ach-badge { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .ach-card:nth-child(5) .ach-badge { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+
+  /* LANGUAGES */
+  .lang-strip {
+    display: flex;
+    gap: 0; flex-wrap: wrap;
+    border: 1px solid #222;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+
+  .lang-item {
+    flex: 1;
+    min-width: 100px;
+    padding: 1.5rem;
+    text-align: center;
+    background: var(--card-bg);
+    border-right: 1px solid #222;
+    transition: background 0.2s;
+  }
+  .lang-item:last-child { border-right: none; }
+  .lang-item:hover { background: #161616; }
+
+  .lang-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.1em;
+    display: block;
+  }
+  .lang-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-top: 0.5rem;
+  }
+
+  /* CONTACT */
+  #contact { border-top: 1px solid #1a1a1a; }
+
+  .contact-inner {
+    border: 1px solid #222;
+    background: var(--card-bg);
+    padding: 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-inner::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 50% 100%, rgba(255,214,0,0.05) 0%, transparent 70%);
+  }
+
+  .contact-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 1rem;
+    position: relative; z-index: 1;
+  }
+
+  .contact-sub {
+    color: #888;
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    position: relative; z-index: 1;
+  }
+
+  .contact-links {
+    display: flex; justify-content: center;
+    gap: 1rem; flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+
+  .contact-link {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    color: var(--paper);
+    padding: 0.9rem 1.8rem;
+    border: 1px solid #333;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .contact-link:hover { border-color: var(--yellow); color: var(--yellow); transform: translateY(-3px); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid #1a1a1a;
+    padding: 2rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  footer p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: #444;
+    letter-spacing: 0.1em;
+  }
+
+  /* REVEAL ANIMATION */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* TICKER */
+  .ticker-wrap {
+    border-top: 1px solid #1a1a1a;
+    border-bottom: 1px solid #1a1a1a;
+    background: #0d0d0d;
+    overflow: hidden;
+    padding: 0.7rem 0;
+    white-space: nowrap;
+  }
+  .ticker-track {
+    display: inline-flex;
+    animation: tickerMove 30s linear infinite;
+  }
+  .ticker-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    color: #444;
+    padding: 0 2rem;
+  }
+  .ticker-item.accent { color: var(--yellow); }
+  @keyframes tickerMove { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    #hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; gap: 3rem; }
+    .hero-right { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .contact-inner { padding: 2.5rem 1.5rem; }
+    footer { padding: 1.5rem; }
+    .lang-strip { flex-direction: row; }
+  }
+</style>
 </head>
 <body>
 
-    <div class="processor-container">
-        <div class="cpu">
-            <div class="pin" style="top:-10px; left:20px; width:2px; height:10px;"></div>
-            <div class="pin" style="top:-10px; left:60px; width:2px; height:10px;"></div>
-            <div class="pin" style="top:-10px; right:20px; width:2px; height:10px;"></div>
-            <div class="pin" style="bottom:-10px; left:40px; width:2px; height:10px;"></div>
-            <div class="pin" style="left:-10px; top:40px; width:10px; height:2px;"></div>
-            <div class="pin" style="right:-10px; top:80px; width:10px; height:2px;"></div>
-        </div>
-        
-        <div class="hero-text">
-            <h1>Varun U</h1>
-            <p style="color: var(--data-flow)">ELECTRONICS & VLSI ENGINEER [cite: 5]</p>
-            <p>VIT Chennai Campus | 2024-2028 [cite: 4, 12]</p>
-        </div>
+<div id="cursor"></div>
 
-        <div style="position:absolute; bottom:20px; font-size:0.8rem; opacity:0.5;">
-            SCROLL TO INITIALIZE DATA TRANSFER
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Varun U</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero" style="max-width:100%;padding-left:3rem;padding-right:3rem;">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+
+  <div class="hero-left">
+    <div class="hero-tag">B.Tech Electronics · VLSI · VIT Chennai · 2024–2028</div>
+    <h1 class="hero-name">
+      <span class="solid">Varun</span>
+      <span>U</span>
+    </h1>
+    <p class="hero-desc">
+      Second-year Electronics Engineering student specializing in VLSI Design & Technology. Building at the intersection of hardware, embedded systems, and AI.
+    </p>
+    <div class="hero-ctas">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-outline">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="orbit"></div>
+      <div class="orbit2"></div>
+      <div class="hero-chip">
+        <div class="chip-inner">
+          <div class="chip-cell active"></div>
+          <div class="chip-cell"></div>
+          <div class="chip-cell active"></div>
+          <div class="chip-cell"></div>
+          <div class="chip-cell"></div>
+          <div class="chip-cell active"></div>
+          <div class="chip-cell"></div>
+          <div class="chip-cell active"></div>
+          <div class="chip-cell active"></div>
+          <div class="chip-cell"></div>
+          <div class="chip-cell active"></div>
+          <div class="chip-cell"></div>
+          <div class="chip-cell"></div>
+          <div class="chip-cell active"></div>
+          <div class="chip-cell"></div>
+          <div class="chip-cell active"></div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">scroll</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item accent">VLSI Design</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">FPGA Systems</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item accent">Verilog</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">Embedded IoT</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item accent">Signal Processing</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">TCAD Simulation</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item accent">AI / ML</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">Analog Design</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item accent">GaN HEMT</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">VIT Chennai</span>
+    <span class="ticker-item">·</span>
+    <!-- repeat for seamless loop -->
+    <span class="ticker-item accent">VLSI Design</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">FPGA Systems</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item accent">Verilog</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">Embedded IoT</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item accent">Signal Processing</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">TCAD Simulation</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item accent">AI / ML</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">Analog Design</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item accent">GaN HEMT</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">VIT Chennai</span>
+    <span class="ticker-item">·</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 / About</div>
+  <h2 class="section-title">Who I Am</h2>
+  <div class="about-grid reveal">
+    <div class="about-text">
+      <p>I'm Varun, a second-year B.Tech student at VIT Chennai pursuing Electronics Engineering with a specialization in <strong style="color:var(--paper)">VLSI Design and Technology</strong>. I'm passionate about hardware — from designing chips to building smart embedded systems.</p>
+      <p>My work spans FPGA-based digital design, embedded IoT, AI-integrated signal processing, and semiconductor device simulation. I thrive at the boundary between hardware and intelligence.</p>
+      <p>Outside the lab, I lead and collaborate across student communities — from IEEE EDS to The White Helmets — because I believe the best engineers are also great communicators and team-builders.</p>
+      <div class="highlight-bar">
+        <p>Currently interning at Mafkin Robotics as a Business Development Intern, bridging the gap between technical engineering and real-world product deployment.</p>
+      </div>
+    </div>
+    <div>
+      <div class="about-stats">
+        <div class="stat-box">
+          <span class="stat-num">8</span>
+          <span class="stat-label">Projects</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">5</span>
+          <span class="stat-label">Languages spoken</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">4</span>
+          <span class="stat-label">Leadership roles</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">2026</span>
+          <span class="stat-label">Currently interning</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">02 / Skills</div>
+  <h2 class="section-title">Technical Arsenal</h2>
+  <div class="skills-container reveal">
+    <div class="skill-group">
+      <div class="skill-group-title">HDL & Digital Design</div>
+      <div class="skill-tags">
+        <span class="tag">Verilog</span>
+        <span class="tag">Digital Electronics</span>
+        <span class="tag">FPGA Design</span>
+        <span class="tag">Logic Synthesis</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">EDA & Simulation</div>
+      <div class="skill-tags">
+        <span class="tag">Quartus</span>
+        <span class="tag">ModelSim</span>
+        <span class="tag">MATLAB</span>
+        <span class="tag">LTspice</span>
+        <span class="tag">TCAD</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Embedded & IoT</div>
+      <div class="skill-tags">
+        <span class="tag">Embedded Systems</span>
+        <span class="tag">IoT Architecture</span>
+        <span class="tag">Real-time Systems</span>
+        <span class="tag">Dual-core Design</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Signal Processing & AI</div>
+      <div class="skill-tags">
+        <span class="tag">DSP Fundamentals</span>
+        <span class="tag">DOA Estimation</span>
+        <span class="tag">Hybrid AI Models</span>
+        <span class="tag">Near/Far Field</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Scripting & Web</div>
+      <div class="skill-tags">
+        <span class="tag">Perl Scripting</span>
+        <span class="tag">Web Development</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">03 / Projects</div>
+  <h2 class="section-title">What I've Built</h2>
+  <div class="projects-grid reveal">
+
+    <div class="project-card">
+      <span class="project-status status-done">Completed</span>
+      <div class="project-title">Hybrid AI Model for 3D DOA Estimation</div>
+      <p class="project-desc">Built a hybrid AI model for seamless 3D Direction of Arrival estimation across near-field and far-field regions, optimized for embedded environments.</p>
+      <div class="project-tech">
+        <span class="tech-tag">Signal Processing</span>
+        <span class="tech-tag">AI/ML</span>
+        <span class="tech-tag">Embedded</span>
+      </div>
     </div>
 
-    <section class="reveal">
-        <h2>System Architecture (Skills)</h2>
-        <ul class="skill-list">
-            <li>Verilog [cite: 7]</li>
-            <li>Digital Electronics [cite: 8]</li>
-            <li>FPGA Design [cite: 8]</li>
-            <li>Quartus [cite: 8]</li>
-            <li>ModelSim [cite: 8]</li>
-            <li>MATLAB [cite: 8]</li>
-            <li>LTspice [cite: 8]</li>
-            <li>TCAD [cite: 8]</li>
-            <li>Perl Scripting [cite: 8]</li>
-        </ul>
-    </section>
+    <div class="project-card">
+      <span class="project-status status-done">Completed</span>
+      <div class="project-title">Adaptive Energy Management — Embedded IoT</div>
+      <p class="project-desc">Designed a dual-core architecture with adaptive power switching logic for real-time energy optimization in IoT devices.</p>
+      <div class="project-tech">
+        <span class="tech-tag">Embedded Systems</span>
+        <span class="tech-tag">IoT</span>
+        <span class="tech-tag">Dual-Core</span>
+      </div>
+    </div>
 
-    <section class="reveal">
-        <h2>Current Threads (Experience)</h2>
-        <div class="card">
-            <h3 style="margin-top:0">Business Development Intern | Mafkin Robotics [cite: 10, 11]</h3>
-            <p style="font-size:0.8rem; color: #888;">Jan 2026 - Present | Chennai [cite: 13]</p>
-            <ul>
-                <li>Collaborated with engineering and product teams for technical positioning[cite: 14].</li>
-                <li>Facilitated technical demonstrations for prospective clients[cite: 14].</li>
-                <li>Coordinated product deployment strategy between teams[cite: 15].</li>
-            </ul>
-        </div>
-    </section>
+    <div class="project-card">
+      <span class="project-status status-done">Completed</span>
+      <div class="project-title">FPGA-Based Mini Voting System</div>
+      <p class="project-desc">Implemented vote counting, input debouncing, and 7-segment display output in Verilog on FPGA hardware, validated using ModelSim simulation.</p>
+      <div class="project-tech">
+        <span class="tech-tag">Verilog</span>
+        <span class="tech-tag">Quartus</span>
+        <span class="tech-tag">ModelSim</span>
+        <span class="tech-tag">FPGA</span>
+      </div>
+    </div>
 
-    <section class="reveal">
-        <h2>Logic Gates (Projects)</h2>
-        
-        <div class="card">
-            <h3>Hybrid AI Model for 3D DOA Estimation [cite: 17]</h3>
-            <p>Built a model for seamless 3D DOA estimation optimized for embedded environments[cite: 18].</p>
-        </div>
+    <div class="project-card">
+      <span class="project-status status-done">Completed</span>
+      <div class="project-title">Real-Time Patient Monitoring in Transit</div>
+      <p class="project-desc">Built an IoT system for live vitals monitoring (ECG, SpO₂, temperature) during ambulance transit with wireless hospital relay and critical alert logic.</p>
+      <div class="project-tech">
+        <span class="tech-tag">Embedded Systems</span>
+        <span class="tech-tag">IoT</span>
+        <span class="tech-tag">Wireless</span>
+        <span class="tech-tag">Healthcare</span>
+      </div>
+    </div>
 
-        <div class="card">
-            <h3>FPGA-Based Mini Voting System [cite: 21]</h3>
-            <p>Implemented vote counting, input debouncing, and 7-segment display using Verilog[cite: 22].</p>
-        </div>
+    <div class="project-card">
+      <span class="project-status status-done">Completed</span>
+      <div class="project-title">Smart Consultation Booking System</div>
+      <p class="project-desc">Created a web platform for patients to search for doctors by city and schedule consultations — a practical healthcare accessibility tool.</p>
+      <div class="project-tech">
+        <span class="tech-tag">Web Dev</span>
+        <span class="tech-tag">Healthcare</span>
+      </div>
+    </div>
 
-        <div class="card">
-            <h3>Real-Time Patient Monitoring System [cite: 23]</h3>
-            <p>IoT system for live vitals monitoring (ECG, SpO2, Temp) during ambulance transit[cite: 24].</p>
-        </div>
+    <div class="project-card">
+      <span class="project-status status-progress">In Progress</span>
+      <div class="project-title">Hardware Authentication via Peak Detector</div>
+      <p class="project-desc">Developing analog signal fingerprinting-based hardware authentication using peak detector and window comparator circuits for secure device identification.</p>
+      <div class="project-tech">
+        <span class="tech-tag">Analog</span>
+        <span class="tech-tag">Digital</span>
+        <span class="tech-tag">Security</span>
+      </div>
+    </div>
 
-        <div class="card">
-            <h3>GaN HEMTs Simulation [cite: 28]</h3>
-            <p>Optimizing field plate geometry using TCAD to improve breakdown voltage in 650V devices[cite: 30].</p>
-        </div>
-    </section>
+    <div class="project-card">
+      <span class="project-status status-progress">In Progress</span>
+      <div class="project-title">Source-Connected Field Plates — 650V GaN HEMTs</div>
+      <p class="project-desc">Simulating and optimizing field plate geometry using TCAD to improve breakdown voltage in 650V GaN HEMT power semiconductor devices.</p>
+      <div class="project-tech">
+        <span class="tech-tag">TCAD</span>
+        <span class="tech-tag">GaN HEMT</span>
+        <span class="tech-tag">Power Electronics</span>
+      </div>
+    </div>
 
-    <section class="reveal">
-        <h2>Interrupts (Leadership & Awards)</h2>
-        <ul>
-            <li><b>Vice Chairperson</b> - The White Helmets, VIT Chennai [cite: 33]</li>
-            <li><b>Outreach Lead</b> - IEEE EDS Student Chapter [cite: 34]</li>
-            <li><b>Operations Lead</b> - Kannada Literary Association [cite: 35]</li>
-            <li><b>4th Place</b> - Niti Yukt National Level Case Study (Finance) [cite: 32]</li>
-        </ul>
-    </section>
+  </div>
+</section>
 
-    <footer style="padding: 50px; text-align: center; border-top: 1px solid #222; font-size: 0.8rem;">
-        <p>TERMINAL END | VARUN U [cite: 1]</p>
-        <p>Email: varunumashankar.u@gmail.com | Phone: +91 9739634569 [cite: 2]</p>
-        <p style="color: var(--data-flow)">Languages: Kannada, English, Hindi, Tamil, Telugu, German [cite: 37]</p>
-    </footer>
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">04 / Experience</div>
+  <h2 class="section-title">Work Experience</h2>
+  <div class="exp-card reveal">
+    <div class="exp-header">
+      <div>
+        <div class="exp-role">Business Development Intern</div>
+        <div class="exp-company">Mafkin Robotics — Chennai, India</div>
+      </div>
+      <div class="exp-date">Jan 2026 – Present</div>
+    </div>
+    <ul class="exp-bullets">
+      <li>Collaborated with engineering and product teams to support technical product positioning and documentation</li>
+      <li>Facilitated technical demonstrations and product outreach activities to prospective clients</li>
+      <li>Coordinated between technical and non-technical teams to drive product deployment strategy</li>
+      <li>Assisted in client technical communication, improving cross-functional alignment</li>
+    </ul>
+  </div>
+</section>
 
-    <script>
-        // Initialization of Scroll Animations
-        ScrollReveal().reveal('.reveal', { 
-            delay: 200, 
-            distance: '50px',
-            origin: 'bottom',
-            duration: 1000,
-            interval: 200
-        });
-    </script>
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="section-label">05 / Achievements</div>
+  <h2 class="section-title">Highlights & Leadership</h2>
+  <div class="ach-grid reveal">
+
+    <div class="ach-card">
+      <div class="ach-badge"></div>
+      <span class="ach-icon">🏆</span>
+      <div class="ach-title">4th Place — Niti Yukt</div>
+      <div class="ach-sub">Finance Track · National Level Case Study Competition</div>
+    </div>
+
+    <div class="ach-card">
+      <div class="ach-badge"></div>
+      <span class="ach-icon">⛑️</span>
+      <div class="ach-title">Vice Chairperson</div>
+      <div class="ach-sub">The White Helmets · VIT Chennai</div>
+    </div>
+
+    <div class="ach-card">
+      <div class="ach-badge"></div>
+      <span class="ach-icon">⚡</span>
+      <div class="ach-title">Outreach Lead</div>
+      <div class="ach-sub">IEEE EDS Student Chapter · VIT Chennai</div>
+    </div>
+
+    <div class="ach-card">
+      <div class="ach-badge"></div>
+      <span class="ach-icon">🎭</span>
+      <div class="ach-title">Operations Lead</div>
+      <div class="ach-sub">Kannada Literary Association · VIT Chennai</div>
+    </div>
+
+    <div class="ach-card">
+      <div class="ach-badge"></div>
+      <span class="ach-icon">🌐</span>
+      <div class="ach-title">Multilingual</div>
+      <div class="ach-sub">Kannada · English · Hindi · Tamil · Telugu · German</div>
+    </div>
+
+  </div>
+
+  <div class="lang-strip" style="margin-top:2rem;">
+    <div class="lang-item">
+      <span class="lang-name">Kannada</span>
+      <span class="lang-dot" style="background:var(--yellow);box-shadow:0 0 6px var(--yellow);"></span>
+    </div>
+    <div class="lang-item">
+      <span class="lang-name">English</span>
+      <span class="lang-dot" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan);"></span>
+    </div>
+    <div class="lang-item">
+      <span class="lang-name">Hindi</span>
+      <span class="lang-dot" style="background:var(--pink);box-shadow:0 0 6px var(--pink);"></span>
+    </div>
+    <div class="lang-item">
+      <span class="lang-name">Tamil</span>
+      <span class="lang-dot" style="background:var(--green);box-shadow:0 0 6px var(--green);"></span>
+    </div>
+    <div class="lang-item">
+      <span class="lang-name">Telugu</span>
+      <span class="lang-dot" style="background:var(--orange);box-shadow:0 0 6px var(--orange);"></span>
+    </div>
+    <div class="lang-item">
+      <span class="lang-name">German</span>
+      <span class="lang-dot" style="background:var(--yellow);box-shadow:0 0 6px var(--yellow);"></span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="max-width:100%;padding-left:3rem;padding-right:3rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="contact-inner reveal">
+      <div class="contact-title">Let's Connect</div>
+      <p class="contact-sub">Open to collaborations, research opportunities, and internships.</p>
+      <div class="contact-links">
+        <a href="mailto:varunumashankar.u@gmail.com" class="contact-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          varunumashankar.u@gmail.com
+        </a>
+        <a href="tel:+919739634569" class="contact-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.43 2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.47a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          +91 97396 34569
+        </a>
+        <a href="https://linkedin.com" target="_blank" class="contact-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Varun U — Electronics Engineering, VIT Chennai</p>
+  <p>Built with ♥ for bold ideas</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .project-card, .ach-card, .stat-box, .skill-group').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Chip cell blinking animation randomization
+  document.querySelectorAll('.chip-cell').forEach(cell => {
+    cell.style.animationDelay = (Math.random() * 2) + 's';
+    cell.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+  });
+</script>
 </body>
 </html>
