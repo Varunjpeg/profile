@@ -3,231 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Varun U | VLSI & Electronics Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Varun U | Silicon Portfolio</title>
+    <script src="https://unpkg.com/scrollreveal"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&display=swap');
-        
+        :root {
+            --bg: #05050a;
+            --chip-body: #1a1a1a;
+            --trace-color: #39ff14; /* Neon Green */
+            --data-flow: #00f3ff;  /* Neon Blue */
+            --text: #ffffff;
+        }
+
         body {
-            background-color: #050505;
-            color: #00ff9d;
-            font-family: 'Fira+Code', monospace;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        .circuit-bg {
-            background-image: radial-gradient(#111 1px, transparent 1px);
-            background-size: 30px 30px;
+        /* The Main Processor at the Top */
+        .processor-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: radial-gradient(circle, #111 0%, #05050a 100%);
         }
 
-        .neon-border {
-            box-shadow: 0 0 10px rgba(0, 255, 157, 0.3), inset 0 0 5px rgba(0, 255, 157, 0.2);
-            border: 1px solid rgba(0, 255, 157, 0.5);
+        .cpu {
+            width: 200px;
+            height: 200px;
+            background: var(--chip-body);
+            border: 4px solid #444;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
+            z-index: 10;
         }
 
-        .glitch:hover {
-            text-shadow: 2px 0 #ff00ea, -2px 0 #00e1ff;
+        .cpu::after {
+            content: "VARUN-V1";
+            color: #555;
+            font-weight: bold;
+            font-size: 0.8rem;
         }
 
-        .trace-line {
+        /* Glowing Pins */
+        .pin {
             position: absolute;
-            background: linear-gradient(90deg, transparent, #00ff9d, transparent);
-            height: 1px;
-            width: 100%;
-            animation: flow 3s linear infinite;
+            background: var(--trace-color);
+            box-shadow: 0 0 10px var(--trace-color);
         }
 
-        @keyframes flow {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        /* Data Streams flowing down on scroll */
+        .data-line {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--data-flow), transparent);
+            z-index: 1;
         }
 
-        .scroll-container::-webkit-scrollbar {
-            width: 5px;
+        .hero-text {
+            margin-top: 30px;
+            text-align: center;
         }
-        .scroll-container::-webkit-scrollbar-thumb {
-            background: #00ff9d;
-            border-radius: 10px;
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            letter-spacing: 5px;
+            margin-bottom: 0;
+            text-transform: uppercase;
         }
+
+        /* Sections styled as Modules */
+        section {
+            max-width: 900px;
+            margin: 100px auto;
+            padding: 40px;
+            border-left: 2px solid var(--data-flow);
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(5px);
+        }
+
+        section::before {
+            content: "BUS_ACTIVE";
+            position: absolute;
+            top: -20px;
+            left: 0;
+            font-size: 0.7rem;
+            color: var(--data-flow);
+            font-family: monospace;
+        }
+
+        h2 {
+            color: var(--trace-color);
+            text-transform: uppercase;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .card {
+            background: #0d0d1a;
+            border: 1px solid #222;
+            padding: 20px;
+            margin: 20px 0;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--data-flow);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+
+        .skill-list {
+            display: flex;
+            wrap: wrap;
+            gap: 10px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .skill-list li {
+            background: #1a1a2e;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            border: 1px solid var(--trace-color);
+        }
+
+        /* Animated Scroll Effect */
+        .reveal { visibility: hidden; }
+
     </style>
 </head>
-<body class="circuit-bg">
+<body>
 
-    <nav class="fixed top-0 w-full z-50 bg-black/80 border-b border-emerald-900/50 backdrop-blur-md">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold tracking-tighter glitch cursor-pointer">
-                VARUN_U::CORE [cite: 1]
-            </div>
-            <div class="hidden md:flex space-x-8 text-sm">
-                <a href="#about" class="hover:text-white transition">01_ABOUT</a>
-                <a href="#projects" class="hover:text-white transition">02_PROJECTS</a>
-                <a href="#experience" class="hover:text-white transition">03_EXP</a>
-                <a href="#contact" class="hover:text-white transition">04_IO</a>
-            </div>
+    <div class="processor-container">
+        <div class="cpu">
+            <div class="pin" style="top:-10px; left:20px; width:2px; height:10px;"></div>
+            <div class="pin" style="top:-10px; left:60px; width:2px; height:10px;"></div>
+            <div class="pin" style="top:-10px; right:20px; width:2px; height:10px;"></div>
+            <div class="pin" style="bottom:-10px; left:40px; width:2px; height:10px;"></div>
+            <div class="pin" style="left:-10px; top:40px; width:10px; height:2px;"></div>
+            <div class="pin" style="right:-10px; top:80px; width:10px; height:2px;"></div>
         </div>
-    </nav>
-
-    <section class="h-screen flex flex-col justify-center items-center relative px-6">
-        <div class="trace-line top-1/4 opacity-20"></div>
-        <div class="text-center z-10">
-            <p class="text-emerald-500 mb-2 opacity-80 uppercase tracking-widest text-xs">Initializing Systems...</p>
-            <h1 class="text-5xl md:text-7xl font-bold text-white mb-4">Varun U [cite: 1]</h1>
-            <h2 class="text-xl md:text-2xl text-emerald-400 font-light max-w-2xl mx-auto">
-                Electronics Engineer & VLSI Designer [cite: 5]
-            </h2>
-            <div class="mt-8 flex gap-4 justify-center">
-                <button class="neon-border px-6 py-2 bg-emerald-950/20 hover:bg-emerald-500 hover:text-black transition duration-300">
-                    VIEW_SCHEMATICS
-                </button>
-                <button class="border border-white/20 px-6 py-2 text-white hover:bg-white/10 transition">
-                    DOWNLOAD_RESUME.pdf
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="max-w-6xl mx-auto py-24 px-6">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-            <div class="neon-border p-8 bg-black/40 relative">
-                <div class="absolute -top-3 -left-3 bg-black px-2 text-xs text-emerald-500">SYSTEM_INFO</div>
-                <h3 class="text-2xl font-bold mb-4 text-white">Education & Profile</h3>
-                <p class="text-emerald-100/70 mb-6 leading-relaxed">
-                    B.Tech in Electronics Engineering with a focus on VLSI Design and Technology from **VIT Chennai**[cite: 4, 5]. 
-                    Specializing in digital design, FPGA-based systems, and bridging the gap between hardware and AI-driven signal processing[cite: 8, 17].
-                </p>
-                <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div><span class="text-emerald-500 font-bold">> LOC:</span> Chennai, India [cite: 13]</div>
-                    <div><span class="text-emerald-500 font-bold">> GPA:</span> 2024-2028 Cohort [cite: 12]</div>
-                </div>
-            </div>
-            
-            <div class="space-y-4">
-                <h3 class="text-xl font-bold text-white">Instruction Set (Skills) [cite: 6]</h3>
-                <div class="flex flex-wrap gap-2">
-                    <span class="bg-emerald-900/30 border border-emerald-500/50 px-3 py-1 rounded text-xs">Verilog HDL [cite: 7]</span>
-                    <span class="bg-emerald-900/30 border border-emerald-500/50 px-3 py-1 rounded text-xs">Digital Electronics [cite: 8]</span>
-                    <span class="bg-emerald-900/30 border border-emerald-500/50 px-3 py-1 rounded text-xs">FPGA System Design [cite: 8]</span>
-                    <span class="bg-emerald-900/30 border border-emerald-500/50 px-3 py-1 rounded text-xs">Quartus & ModelSim [cite: 8]</span>
-                    <span class="bg-emerald-900/30 border border-emerald-500/50 px-3 py-1 rounded text-xs">MATLAB & LTspice [cite: 8]</span>
-                    <span class="bg-emerald-900/30 border border-emerald-500/50 px-3 py-1 rounded text-xs">TCAD Simulation [cite: 8]</span>
-                    <span class="bg-emerald-900/30 border border-emerald-500/50 px-3 py-1 rounded text-xs">Perl Scripting [cite: 8]</span>
-                </div>
-                <h3 class="text-xl font-bold text-white pt-4">Linguistic Bus [cite: 36]</h3>
-                <p class="text-sm text-emerald-100/60">Kannada, English, Hindi, Tamil, Telugu, German [cite: 37]</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects" class="max-w-6xl mx-auto py-24 px-6">
-        <h2 class="text-3xl font-bold mb-12 flex items-center gap-4">
-            <span class="text-emerald-500">02_</span> DOCUMENTED_PROJECTS [cite: 16]
-            <div class="h-px bg-emerald-900 flex-grow"></div>
-        </h2>
         
-        <div class="grid md:grid-cols-3 gap-6">
-            <div class="neon-border p-6 group hover:bg-emerald-500/5 transition">
-                <i data-lucide="cpu" class="mb-4 text-emerald-400"></i>
-                <h4 class="font-bold text-white mb-2">Hybrid AI Model for 3D DOA [cite: 17]</h4>
-                <p class="text-xs text-emerald-100/50 mb-4">Signal Processing & AI model optimized for embedded environments[cite: 17, 18].</p>
-                <div class="text-[10px] text-emerald-500 font-mono">STATUS: OPTIMIZED [cite: 18]</div>
-            </div>
+        <div class="hero-text">
+            <h1>Varun U</h1>
+            <p style="color: var(--data-flow)">ELECTRONICS & VLSI ENGINEER [cite: 5]</p>
+            <p>VIT Chennai Campus | 2024-2028 [cite: 4, 12]</p>
+        </div>
 
-            <div class="neon-border p-6 group hover:bg-emerald-500/5 transition">
-                <i data-lucide="zap" class="mb-4 text-emerald-400"></i>
-                <h4 class="font-bold text-white mb-2">Adaptive Energy Management [cite: 19]</h4>
-                <p class="text-xs text-emerald-100/50 mb-4">Dual-core architecture with power switching logic for IoT devices[cite: 20].</p>
-                <div class="text-[10px] text-emerald-500 font-mono">STATUS: DESIGNED [cite: 20]</div>
-            </div>
+        <div style="position:absolute; bottom:20px; font-size:0.8rem; opacity:0.5;">
+            SCROLL TO INITIALIZE DATA TRANSFER
+        </div>
+    </div>
 
-            <div class="neon-border p-6 group hover:bg-emerald-500/5 transition">
-                <i data-lucide="activity" class="mb-4 text-emerald-400"></i>
-                <h4 class="font-bold text-white mb-2">Real-Time Patient Monitor [cite: 23]</h4>
-                <p class="text-xs text-emerald-100/50 mb-4">IoT system for live vitals tracking during ambulance transit[cite: 24].</p>
-                <div class="text-[10px] text-emerald-500 font-mono">STATUS: FUNCTIONAL [cite: 24]</div>
-            </div>
-            
-            <div class="neon-border p-6 group hover:bg-emerald-500/5 transition border-dashed border-emerald-900">
-                <i data-lucide="shield-check" class="mb-4 text-emerald-400"></i>
-                <h4 class="font-bold text-white mb-2">Hardware Auth System [cite: 27]</h4>
-                <p class="text-xs text-emerald-100/50 mb-4">Analog signal fingerprinting using peak detectors[cite: 27].</p>
-                <div class="text-[10px] text-yellow-500 font-mono">STATUS: IN_PROGRESS [cite: 27]</div>
-            </div>
+    <section class="reveal">
+        <h2>System Architecture (Skills)</h2>
+        <ul class="skill-list">
+            <li>Verilog [cite: 7]</li>
+            <li>Digital Electronics [cite: 8]</li>
+            <li>FPGA Design [cite: 8]</li>
+            <li>Quartus [cite: 8]</li>
+            <li>ModelSim [cite: 8]</li>
+            <li>MATLAB [cite: 8]</li>
+            <li>LTspice [cite: 8]</li>
+            <li>TCAD [cite: 8]</li>
+            <li>Perl Scripting [cite: 8]</li>
+        </ul>
+    </section>
 
-            <div class="neon-border p-6 group hover:bg-emerald-500/5 transition">
-                <i data-lucide="microchip" class="mb-4 text-emerald-400"></i>
-                <h4 class="font-bold text-white mb-2">FPGA Voting System [cite: 21]</h4>
-                <p class="text-xs text-emerald-100/50 mb-4">Verilog implementation with debouncing and 7-segment display[cite: 22].</p>
-                <div class="text-[10px] text-emerald-500 font-mono">STATUS: VALIDATED [cite: 22]</div>
-            </div>
-
-            <div class="neon-border p-6 group hover:bg-emerald-500/5 transition border-dashed border-emerald-900">
-                <i data-lucide="layers" class="mb-4 text-emerald-400"></i>
-                <h4 class="font-bold text-white mb-2">650V GaN HEMTs [cite: 28]</h4>
-                <p class="text-xs text-emerald-100/50 mb-4">TCAD simulation for optimizing breakdown voltage geometry[cite: 30].</p>
-                <div class="text-[10px] text-yellow-500 font-mono">STATUS: SIMULATING [cite: 30]</div>
-            </div>
+    <section class="reveal">
+        <h2>Current Threads (Experience)</h2>
+        <div class="card">
+            <h3 style="margin-top:0">Business Development Intern | Mafkin Robotics [cite: 10, 11]</h3>
+            <p style="font-size:0.8rem; color: #888;">Jan 2026 - Present | Chennai [cite: 13]</p>
+            <ul>
+                <li>Collaborated with engineering and product teams for technical positioning[cite: 14].</li>
+                <li>Facilitated technical demonstrations for prospective clients[cite: 14].</li>
+                <li>Coordinated product deployment strategy between teams[cite: 15].</li>
+            </ul>
         </div>
     </section>
 
-    <section id="experience" class="max-w-6xl mx-auto py-24 px-6 bg-emerald-950/10">
-        <div class="grid md:grid-cols-2 gap-12">
-            <div>
-                <h2 class="text-2xl font-bold mb-8 text-white tracking-widest uppercase italic italic">Work_Log [cite: 9]</h2>
-                <div class="border-l-2 border-emerald-500 pl-6 py-2">
-                    <h4 class="font-bold text-emerald-400 text-lg">Business Development Intern [cite: 10]</h4>
-                    <p class="text-sm text-white/80">Mafkin Robotics | Jan 2026 - Present [cite: 11, 13]</p>
-                    <ul class="mt-4 text-xs text-emerald-100/60 list-disc space-y-2">
-                        <li>Technical product positioning and documentation support[cite: 14].</li>
-                        <li>Technical demonstrations for prospective clients[cite: 14].</li>
-                        <li>Coordinating product deployment strategy between teams[cite: 15].</li>
-                    </ul>
-                </div>
-            </div>
-            <div>
-                <h2 class="text-2xl font-bold mb-8 text-white tracking-widest uppercase italic">Node_Roles [cite: 31]</h2>
-                <div class="space-y-6">
-                    <div class="flex justify-between items-center border-b border-emerald-900 pb-2">
-                        <span class="text-white font-bold">Vice Chairperson [cite: 33]</span>
-                        <span class="text-xs text-emerald-500">The White Helmets [cite: 33]</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-emerald-900 pb-2">
-                        <span class="text-white font-bold">Outreach Lead [cite: 34]</span>
-                        <span class="text-xs text-emerald-500">IEEE EDS Chapter [cite: 34]</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-emerald-900 pb-2">
-                        <span class="text-white font-bold">Operations Lead [cite: 35]</span>
-                        <span class="text-xs text-emerald-500">Kannada Literary Association [cite: 35]</span>
-                    </div>
-                </div>
-            </div>
+    <section class="reveal">
+        <h2>Logic Gates (Projects)</h2>
+        
+        <div class="card">
+            <h3>Hybrid AI Model for 3D DOA Estimation [cite: 17]</h3>
+            <p>Built a model for seamless 3D DOA estimation optimized for embedded environments[cite: 18].</p>
+        </div>
+
+        <div class="card">
+            <h3>FPGA-Based Mini Voting System [cite: 21]</h3>
+            <p>Implemented vote counting, input debouncing, and 7-segment display using Verilog[cite: 22].</p>
+        </div>
+
+        <div class="card">
+            <h3>Real-Time Patient Monitoring System [cite: 23]</h3>
+            <p>IoT system for live vitals monitoring (ECG, SpO2, Temp) during ambulance transit[cite: 24].</p>
+        </div>
+
+        <div class="card">
+            <h3>GaN HEMTs Simulation [cite: 28]</h3>
+            <p>Optimizing field plate geometry using TCAD to improve breakdown voltage in 650V devices[cite: 30].</p>
         </div>
     </section>
 
-    <footer id="contact" class="py-12 border-t border-emerald-900 text-center">
-        <div class="max-w-6xl mx-auto px-6">
-            <h2 class="text-xl font-bold text-white mb-6 tracking-tighter italic italic">TERMINATE_AND_STAY_RESIDENT</h2>
-            <div class="flex justify-center space-x-6 mb-8">
-                <a href="mailto:varunumashankar.u@gmail.com" class="hover:text-white"><i data-lucide="mail"></i></a> [cite: 2]
-                <a href="#" class="hover:text-white"><i data-lucide="linkedin"></i></a> [cite: 2]
-                <a href="#" class="hover:text-white"><i data-lucide="github"></i></a>
-            </div>
-            <p class="text-[10px] text-emerald-900 uppercase">Built for Varun U | (C) 2026 Embedded Systems Portfolio</p>
-        </div>
+    <section class="reveal">
+        <h2>Interrupts (Leadership & Awards)</h2>
+        <ul>
+            <li><b>Vice Chairperson</b> - The White Helmets, VIT Chennai [cite: 33]</li>
+            <li><b>Outreach Lead</b> - IEEE EDS Student Chapter [cite: 34]</li>
+            <li><b>Operations Lead</b> - Kannada Literary Association [cite: 35]</li>
+            <li><b>4th Place</b> - Niti Yukt National Level Case Study (Finance) [cite: 32]</li>
+        </ul>
+    </section>
+
+    <footer style="padding: 50px; text-align: center; border-top: 1px solid #222; font-size: 0.8rem;">
+        <p>TERMINAL END | VARUN U [cite: 1]</p>
+        <p>Email: varunumashankar.u@gmail.com | Phone: +91 9739634569 [cite: 2]</p>
+        <p style="color: var(--data-flow)">Languages: Kannada, English, Hindi, Tamil, Telugu, German [cite: 37]</p>
     </footer>
 
     <script>
-        // Initialize Icons
-        lucide.createIcons();
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+        // Initialization of Scroll Animations
+        ScrollReveal().reveal('.reveal', { 
+            delay: 200, 
+            distance: '50px',
+            origin: 'bottom',
+            duration: 1000,
+            interval: 200
         });
     </script>
 </body>
